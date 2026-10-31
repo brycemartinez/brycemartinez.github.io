@@ -1,0 +1,151 @@
+---
+// Layout for the single page. Content comes from src/content.ts.
+import fs from 'node:fs';
+import path from 'node:path';
+import '@fontsource-variable/fraunces';
+import '@fontsource/atkinson-hyperlegible/400.css';
+import '@fontsource/atkinson-hyperlegible/700.css';
+import '../styles/global.css';
+import { site, about, experience, education, certifications, skills } from '../content';
+
+// The photo shows only if public/assets/headshot.jpg exists at build time;
+// otherwise the initials circle is used, so there's never a broken image.
+const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/assets/headshot.jpg'));
+const siteUrl = Astro.site?.href ?? '/';
+const ogImage = hasPhoto ? new URL('/assets/headshot.jpg', Astro.site).href : null;
+const pageTitle = `${site.name} | ${site.tagline}`;
+const year = new Date().getFullYear();
+
+const nav = [
+  { href: '#about', label: 'About' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#education', label: 'Education' },
+  { href: '#skills', label: 'Skills' },
+];
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={site.description} />
+    <link rel="canonical" href={siteUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#1E3A5F" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content={site.name} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:alt" content={`Portrait of ${site.name}`} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={site.description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav container" aria-label="Main">
+        <a class="nav-name" href="#top">{site.name}</a>
+        <ul class="nav-links">
+          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero container" id="top" aria-labelledby="hero-title">
+        <div class="portrait">
+          {hasPhoto ? (
+            <img src="/assets/headshot.jpg" alt={`Portrait of ${site.name}`} width="220" height="220" />
+          ) : (
+            <span class="initials" aria-hidden="true">{site.initials}</span>
+          )}
+        </div>
+        <p class="tagline">{site.tagline}</p>
+        <h1 id="hero-title">{site.name}</h1>
+        <p class="intro">{site.intro}</p>
+        <a class="button" href={site.linkedin} rel="me noopener" target="_blank">
+          Connect on LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      </section>
+
+      <section class="section container narrow" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">
+          About
+          {about.isDraft && <span class="draft-badge">Draft: edit me</span>}
+        </h2>
+        {about.paragraphs.map((p) => <p>{p}</p>)}
+      </section>
+
+      <section class="section container" id="experience" aria-labelledby="experience-title">
+        <h2 id="experience-title">Experience</h2>
+        {experience.map((group) => (
+          <div class="panel" role="group" aria-labelledby={`grp-${slug(group.group)}`}>
+            <h3 class="panel-title" id={`grp-${slug(group.group)}`}>{group.group}</h3>
+            <ul class="cards">
+              {group.roles.map((role) => (
+                <li>
+                  <article class="card">
+                    <p class="dates">{role.dates}</p>
+                    <h4>{role.title}</h4>
+                    <p class="org">{role.org}</p>
+                    {role.points.length > 0 && (
+                      <ul class="points">
+                        {role.points.map((pt) => <li>{pt}</li>)}
+                      </ul>
+                    )}
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <section class="section container" id="education" aria-labelledby="education-title">
+        <h2 id="education-title">Education &amp; Certifications</h2>
+        <div class="edu-grid">
+          {education.map((e) => (
+            <article class="card">
+              <h3>{e.school}</h3>
+              <ul class="points">
+                {e.degrees.map((d) => <li>{d}</li>)}
+              </ul>
+            </article>
+          ))}
+          <article class="card">
+            <h3>Certifications</h3>
+            <ul class="points">
+              {certifications.map((c) => <li>{c}</li>)}
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section container" id="skills" aria-labelledby="skills-title">
+        <h2 id="skills-title">Skills</h2>
+        <ul class="chips">
+          {skills.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; {year} {site.name}</p>
+        <a href={site.linkedin} rel="me noopener" target="_blank">
+          LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>
