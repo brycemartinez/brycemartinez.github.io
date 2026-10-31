@@ -11,7 +11,7 @@ A single-page professional site covering my background in emergency medical serv
 | I want to… | Do this |
 | --- | --- |
 | Change any text on the site | Edit [`src/content.ts`](src/content.ts) ([how](#editing-the-content)) |
-| Add or replace my photo | Put a square `headshot.jpg` in `public/assets/` ([how](#adding-a-photo)) |
+| Add or replace my photo | Put a portrait `headshot.jpg` in `public/assets/` ([how](#adding-a-photo)) |
 | See changes before publishing | `npm run dev`, then open http://localhost:4321 ([how](#previewing-locally)) |
 | Publish changes | Commit and push to `main`. The site updates in about a minute ([how](#publishing-changes)) |
 | Check whether a publish worked | The repo's **Actions** tab ([how](#troubleshooting)) |
@@ -39,10 +39,10 @@ The file is split into labeled blocks: `site` (name, tagline, intro, LinkedIn), 
 
 ## Adding a photo
 
-1. Crop a headshot to a **square**. About 600 × 600 pixels is plenty.
+1. Crop a headshot to a **portrait shape**, slightly taller than wide. About 600 × 700 pixels works well. Other shapes are cropped to fit.
 2. Name it exactly **`headshot.jpg`** (lowercase).
 3. Put it at **`public/assets/headshot.jpg`**.
-4. Publish. The photo replaces the "BM" initials circle and becomes the preview image when someone shares your link.
+4. Publish. The photo replaces the dark "BM" initials block and becomes the preview image when someone shares your link.
 
 To go back to the initials, delete the file. On GitHub.com you can upload the photo directly: open `public/assets`, then **Add file → Upload files**.
 
@@ -135,4 +135,4 @@ git push
 | `.github/workflows/deploy.yml` | Builds and publishes the site on every push |
 | `astro.config.mjs` | Site address and build settings |
 
-**Design notes:** cream background with a deep navy accent. Headings use Fraunces and body text uses Atkinson Hyperlegible, a typeface designed for readability; both are served from the site itself. All color pairs meet WCAG AA contrast, the page works with a keyboard, and the entrance animation turns off for visitors who prefer reduced motion.
+**Design notes:** an editorial look with a warm off-white background, near-black type, and a single rust accent. Headings use Plus Jakarta Sans (bold, uppercase), body text uses Inter, and small labels use a monospace font. The fonts are served from the site itself. All color pairs meet WCAG AA contrast, the page works with a keyboard, and the entrance animation turns off for visitors who prefer reduced motion.

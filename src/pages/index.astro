@@ -2,19 +2,19 @@
 // Layout for the single page. Content comes from src/content.ts.
 import fs from 'node:fs';
 import path from 'node:path';
-import '@fontsource-variable/fraunces';
-import '@fontsource/atkinson-hyperlegible/400.css';
-import '@fontsource/atkinson-hyperlegible/700.css';
+import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { site, about, experience, education, certifications, skills } from '../content';
 
 // The photo shows only if public/assets/headshot.jpg exists at build time;
-// otherwise the initials circle is used, so there's never a broken image.
+// otherwise the initials block is used, so there's never a broken image.
 const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/assets/headshot.jpg'));
 const siteUrl = Astro.site?.href ?? '/';
 const ogImage = hasPhoto ? new URL('/assets/headshot.jpg', Astro.site).href : null;
 const pageTitle = `${site.name} | ${site.tagline}`;
 const year = new Date().getFullYear();
+const nameLines = site.name.split(' ');
 
 const nav = [
   { href: '#about', label: 'About' },
@@ -34,7 +34,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
     <meta name="description" content={site.description} />
     <link rel="canonical" href={siteUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#1E3A5F" />
+    <meta name="theme-color" content="#FCF9F8" />
 
     <meta property="og:type" content="profile" />
     <meta property="og:title" content={pageTitle} />
@@ -58,44 +58,57 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
         <ul class="nav-links">
           {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
+        <a class="button nav-cta" href={site.linkedin} rel="me noopener" target="_blank">
+          LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
       </nav>
     </header>
 
     <main id="main">
       <section class="hero container" id="top" aria-labelledby="hero-title">
+        <div class="hero-text">
+          <h1 id="hero-title">
+            {nameLines.map((line) => <span class="hero-line">{line}</span>)}
+          </h1>
+          <p class="intro">{site.intro}</p>
+          <a class="button hero-cta" href={site.linkedin} rel="me noopener" target="_blank">
+            Connect on LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </div>
+        <p class="label hero-label">{site.tagline}</p>
         <div class="portrait">
           {hasPhoto ? (
-            <img src="/assets/headshot.jpg" alt={`Portrait of ${site.name}`} width="220" height="220" />
+            <img src="/assets/headshot.jpg" alt={`Portrait of ${site.name}`} width="480" height="560" />
           ) : (
             <span class="initials" aria-hidden="true">{site.initials}</span>
           )}
         </div>
-        <p class="tagline">{site.tagline}</p>
-        <h1 id="hero-title">{site.name}</h1>
-        <p class="intro">{site.intro}</p>
-        <a class="button" href={site.linkedin} rel="me noopener" target="_blank">
-          Connect on LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
-        </a>
       </section>
 
-      <section class="section container narrow" id="about" aria-labelledby="about-title">
-        <h2 id="about-title">
-          About
-          {about.isDraft && <span class="draft-badge">Draft: edit me</span>}
-        </h2>
-        {about.paragraphs.map((p) => <p>{p}</p>)}
+      <section class="section container split" id="about" aria-labelledby="about-title">
+        <div class="section-head">
+          <h2 id="about-title">About</h2>
+          <p class="label">01 — Background</p>
+          {about.isDraft && <p class="draft-badge">Draft: edit me</p>}
+        </div>
+        <div class="section-body prose">
+          {about.paragraphs.map((p) => <p>{p}</p>)}
+        </div>
       </section>
 
       <section class="section container" id="experience" aria-labelledby="experience-title">
-        <h2 id="experience-title">Experience</h2>
+        <div class="section-head wide">
+          <h2 id="experience-title">Experience</h2>
+          <p class="label">02 — Work &amp; Service</p>
+        </div>
         {experience.map((group) => (
-          <div class="panel" role="group" aria-labelledby={`grp-${slug(group.group)}`}>
-            <h3 class="panel-title" id={`grp-${slug(group.group)}`}>{group.group}</h3>
-            <ul class="cards">
+          <div class="group" role="group" aria-labelledby={`grp-${slug(group.group)}`}>
+            <h3 class="label group-title" id={`grp-${slug(group.group)}`}>{group.group}</h3>
+            <ul class="rows">
               {group.roles.map((role) => (
-                <li>
-                  <article class="card">
-                    <p class="dates">{role.dates}</p>
+                <li class="row">
+                  <p class="row-date">{role.dates}</p>
+                  <div class="row-body">
                     <h4>{role.title}</h4>
                     <p class="org">{role.org}</p>
                     {role.points.length > 0 && (
@@ -103,7 +116,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
                         {role.points.map((pt) => <li>{pt}</li>)}
                       </ul>
                     )}
-                  </article>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -111,40 +124,55 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
         ))}
       </section>
 
-      <section class="section container" id="education" aria-labelledby="education-title">
-        <h2 id="education-title">Education &amp; Certifications</h2>
-        <div class="edu-grid">
-          {education.map((e) => (
-            <article class="card">
-              <h3>{e.school}</h3>
-              <ul class="points">
-                {e.degrees.map((d) => <li>{d}</li>)}
-              </ul>
-            </article>
-          ))}
-          <article class="card">
-            <h3>Certifications</h3>
-            <ul class="points">
-              {certifications.map((c) => <li>{c}</li>)}
-            </ul>
-          </article>
+      <section class="section container split" id="education" aria-labelledby="education-title">
+        <div class="section-head">
+          <h2 id="education-title">Education</h2>
+          <p class="label">03 — Training &amp; Certifications</p>
+        </div>
+        <div class="section-body">
+          <ul class="rows">
+            {education.map((e) => (
+              <li class="row row-plain">
+                <div class="row-body">
+                  <h3 class="h4">{e.school}</h3>
+                  <ul class="points">
+                    {e.degrees.map((d) => <li>{d}</li>)}
+                  </ul>
+                </div>
+              </li>
+            ))}
+            <li class="row row-plain">
+              <div class="row-body">
+                <h3 class="h4">Certifications</h3>
+                <ul class="points">
+                  {certifications.map((c) => <li>{c}</li>)}
+                </ul>
+              </div>
+            </li>
+          </ul>
         </div>
       </section>
 
-      <section class="section container" id="skills" aria-labelledby="skills-title">
-        <h2 id="skills-title">Skills</h2>
-        <ul class="chips">
-          {skills.map((s) => <li>{s}</li>)}
-        </ul>
+      <section class="section container split" id="skills" aria-labelledby="skills-title">
+        <div class="section-head">
+          <h2 id="skills-title">Skills</h2>
+          <p class="label">04 — Languages &amp; Tools</p>
+        </div>
+        <div class="section-body">
+          <ul class="skill-list">
+            {skills.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <div class="container footer-inner">
-        <p>&copy; {year} {site.name}</p>
+        <p class="footer-name">{site.name}</p>
         <a href={site.linkedin} rel="me noopener" target="_blank">
           LinkedIn<span class="visually-hidden"> (opens in a new tab)</span>
         </a>
+        <p class="label footer-year">&copy; {year}</p>
       </div>
     </footer>
   </body>
