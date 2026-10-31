@@ -1,60 +1,54 @@
-# brycemartinez.github.io
+# Bryce Martinez: Personal Website
 
-My personal website, live at **https://brycemartinez.github.io**.
+**Live site: https://brycemartinez.github.io**
 
-It's built with [Astro](https://astro.build), which turns one content file into a plain, fast HTML page with no JavaScript on the page. GitHub hosts it for free and rebuilds it automatically every time you push a change.
+A single-page professional site covering my background in emergency medical services, public health, and community care. It's built with [Astro](https://astro.build) and hosted free on GitHub Pages. The finished page is plain HTML and CSS, with no JavaScript, no tracking, and no outside font or analytics requests.
 
 ---
 
-## 1. Editing the content
+## Quick reference
 
-**All the text lives in one file: [`src/content.ts`](src/content.ts).** You never need to touch the layout files.
+| I want to… | Do this |
+| --- | --- |
+| Change any text on the site | Edit [`src/content.ts`](src/content.ts) ([how](#editing-the-content)) |
+| Add or replace my photo | Put a square `headshot.jpg` in `public/assets/` ([how](#adding-a-photo)) |
+| See changes before publishing | `npm run dev`, then open http://localhost:4321 ([how](#previewing-locally)) |
+| Publish changes | Commit and push to `main`. The site updates in about a minute ([how](#publishing-changes)) |
+| Check whether a publish worked | The repo's **Actions** tab ([how](#troubleshooting)) |
 
-- **Change text:** edit what's between the quotes `'like this'`. Keep the quotes and the commas at the ends of lines.
-- **Apostrophes:** inside `'single quotes'`, use the curly apostrophe `’` (as in `I’m`), or the text will break. If you prefer, you can wrap that line in double quotes `"..."` instead.
-- **Add a job:** copy an existing `{ title: ..., org: ..., dates: ..., points: [...] },` block, paste it where you want it in its group, and edit it.
-- **Remove a job:** delete its whole `{ ... },` block.
-- **About section:** the three paragraphs are a **draft I wrote for you**. Rewrite them in your own words, then change `isDraft: true` to `isDraft: false` to remove the yellow "Draft" label.
-- **LinkedIn:** replace `https://www.linkedin.com/in/YOUR-PROFILE` with your real profile URL. It appears in the hero and the footer.
+---
 
-> **Privacy:** don't add a phone number, email address, home location, or certification numbers to this file. Everything here is public.
+## Editing the content
 
-## 2. Adding your photo
+**Every word on the site lives in one file: [`src/content.ts`](src/content.ts).** You never need to touch the layout or styling to update your experience, education, or skills.
 
-1. Choose a headshot and crop it to a **square** (about 600 × 600 pixels is plenty).
-2. Name it exactly **`headshot.jpg`**, all lowercase.
-3. Put it in the **`public/assets/`** folder, so the full path is `public/assets/headshot.jpg`.
-4. Push the change (see section 5). The "BM" initials circle is replaced by your photo automatically, and the photo also becomes the preview image when someone shares your link.
+The file is split into labeled blocks: `site` (name, tagline, intro, LinkedIn), `about`, `experience`, `education`, `certifications`, and `skills`.
 
-To go back to the initials, delete the file.
+- **Change text:** edit what's between the quotes `'like this'`. Keep the quotes and the comma at the end of each line.
+- **Apostrophes:** inside `'single quotes'`, use the curly apostrophe `’` (as in `I’m`). A straight `'` ends the text early and breaks the build.
+- **Add a role:** copy an existing `{ title: …, org: …, dates: …, points: [ … ] },` block, paste it into the right group, and edit it. Roles appear in the order they're listed.
+- **Remove a role:** delete its whole `{ … },` block.
+- **Roles with no bullet points:** use `points: []`.
 
-## 3. One-time setup on your computer
+### Before you share the link
+- [ ] Replace `https://www.linkedin.com/in/YOUR-PROFILE` with your real LinkedIn URL (in the `site` block).
+- [ ] Rewrite the three **About** paragraphs in your own words. They're a starting draft.
+- [ ] Change `isDraft: true` to `isDraft: false` to remove the yellow "Draft" label.
 
-You need two free tools:
+> **Privacy:** everything in this repo is public. Don't add a phone number, email address, home location, certification numbers, or a resume file.
 
-1. **Node.js** (the LTS version): https://nodejs.org. Download it and run the installer.
-2. **Git:** on a Mac, open the **Terminal** app and type `git --version`. If Git isn't installed, macOS offers to install it; click **Install**.
+## Adding a photo
 
-### Keep your email private in git (important; do this before your first commit)
+1. Crop a headshot to a **square**. About 600 × 600 pixels is plenty.
+2. Name it exactly **`headshot.jpg`** (lowercase).
+3. Put it at **`public/assets/headshot.jpg`**.
+4. Publish. The photo replaces the "BM" initials circle and becomes the preview image when someone shares your link.
 
-Every git commit records an email address, and anyone can read it in a public repository's history. Use GitHub's private "noreply" address instead:
+To go back to the initials, delete the file. On GitHub.com you can upload the photo directly: open `public/assets`, then **Add file → Upload files**.
 
-1. On GitHub, go to **Settings → Emails**.
-2. Check **"Keep my email addresses private"** and **"Block command line pushes that expose my email."**
-3. Copy the address shown there. It looks like `ID+USERNAME@users.noreply.github.com` (a number, a plus sign, then your username).
-4. In Terminal, run these, pasting in your own noreply address:
+## Previewing locally
 
-```bash
-git config --global user.name "Bryce Martinez"
-```
-
-```bash
-git config --global user.email "PASTE-YOUR-NOREPLY-ADDRESS-HERE"
-```
-
-## 4. Previewing the site on your computer
-
-In Terminal, go to this project folder (type `cd `, with a space, then drag the folder onto the Terminal window and press Return). Then run:
+You need [Node.js](https://nodejs.org) (the LTS version) installed. In Terminal, from this folder:
 
 ```bash
 npm install
@@ -64,98 +58,81 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:4321** in your browser. While the preview is running, it updates every time you save `src/content.ts`. Press **Control + C** in Terminal to stop it.
+Open **http://localhost:4321**. The page refreshes each time you save a file. Press **Control + C** to stop.
 
-You only need `npm install` the first time, or after a long break.
+`npm install` is only needed the first time, or after the packages change. To check the exact output that gets published, run `npm run build`; the result appears in `dist/`.
 
-## 5. Putting the site online (first time)
+## Publishing changes
 
-### a. Create the repository on GitHub
+Every push to the `main` branch rebuilds and republishes the site automatically, using [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Changes are usually live within about a minute.
 
-1. Go to https://github.com/new.
-2. **Repository name:** `brycemartinez.github.io`. It must be exactly this for the site to appear at the root address.
-3. Set it to **Public** (free GitHub Pages requires a public repo).
-4. Leave "Add a README", ".gitignore", and "license" **unchecked**.
-5. Click **Create repository**.
-
-### b. Push this folder to it
-
-In Terminal, inside the project folder, run these one at a time:
-
-```bash
-git init
-```
+**From your computer:**
 
 ```bash
 git add .
 ```
 
 ```bash
-git commit -m "First version of my website"
-```
-
-```bash
-git branch -M main
-```
-
-```bash
-git remote add origin https://github.com/brycemartinez/brycemartinez.github.io.git
-```
-
-```bash
-git push -u origin main
-```
-
-If git asks you to sign in, follow the browser prompt. If it asks for a **password**, it actually needs a *personal access token*: create one at GitHub → Settings → Developer settings → Personal access tokens, and paste that in instead.
-
-*Prefer clicking to typing?* [GitHub Desktop](https://desktop.github.com) does the same thing: **File → Add Local Repository**, then **Publish repository**. Still do the email step above first, and in GitHub Desktop's settings make sure the noreply address is the one selected.
-
-### c. Turn on GitHub Pages
-
-1. In your repo on GitHub, open **Settings → Pages**.
-2. Under **Build and deployment → Source**, choose **GitHub Actions**.
-3. Open the **Actions** tab. You'll see "Deploy to GitHub Pages" running. When it shows a green check (usually 1–2 minutes), your site is live at **https://brycemartinez.github.io**.
-
-If the first run happened before you switched Pages to "GitHub Actions", open the **Actions** tab, click **Deploy to GitHub Pages → Run workflow** to run it again.
-
-## 6. Updating the site later
-
-The site redeploys automatically whenever a change lands on `main`. Use whichever method is easier:
-
-**Option A: edit on GitHub.com (no tools needed)**
-1. In your repo, open `src/content.ts` and click the ✏️ pencil icon.
-2. Make your edits, then click **Commit changes**.
-3. Wait about 2 minutes, then refresh your site.
-
-To add or replace your photo this way, open the `public/assets` folder, then **Add file → Upload files**.
-
-**Option B: edit on your computer**
-1. Edit `src/content.ts` and preview with `npm run dev`.
-2. Then run:
-
-```bash
-git add .
-```
-
-```bash
-git commit -m "Update experience"
+git commit -m "Describe what you changed"
 ```
 
 ```bash
 git push
 ```
 
-Check the **Actions** tab if something seems off. A red ✗ usually means a typo in `content.ts`, such as a missing quote or comma; click the failed run to see which line.
+**From GitHub.com (no tools needed):** open a file in the repo, click the ✏️ pencil, make your edits, and click **Commit changes**.
 
----
+## Troubleshooting
 
-### What's where
+- **The site didn't update.** Open the repo's **Actions** tab. A green ✓ means it published, so hard-refresh the page (⌘ + Shift + R). A red ✗ means the build failed: click it to see the error.
+- **The build failed after editing `content.ts`.** Look for a missing quote, comma, or bracket near the line the error mentions, or a straight apostrophe `'` inside a `'single-quoted'` line.
+- **`git push` asks for a password.** Run `gh auth login` and follow the browser prompts. GitHub doesn't accept account passwords for git.
+- **The site shows a plain README page instead of the design.** In the repo's **Settings → Pages**, make sure **Source** is set to **GitHub Actions**.
+
+## Setting up on a new computer
+
+1. Install [Node.js](https://nodejs.org) (LTS), [Homebrew](https://brew.sh), and the GitHub tool:
+
+   ```bash
+   brew install gh
+   ```
+
+2. Sign in to GitHub. This opens your browser:
+
+   ```bash
+   gh auth login
+   ```
+
+3. Download the project and install its packages:
+
+   ```bash
+   gh repo clone brycemartinez/brycemartinez.github.io
+   ```
+
+   ```bash
+   cd brycemartinez.github.io && npm install
+   ```
+
+4. Keep your email private in commits. Every commit records an email address, so use GitHub's noreply address (find it under GitHub **Settings → Emails**):
+
+   ```bash
+   git config user.email "PASTE-YOUR-NOREPLY-ADDRESS"
+   ```
+
+   ```bash
+   git config user.name "Bryce Martinez"
+   ```
+
+## Project structure
 
 | Path | What it is |
 | --- | --- |
-| `src/content.ts` | **All site text. The only file you normally edit.** |
-| `public/assets/headshot.jpg` | Your photo (optional) |
-| `public/favicon.svg` | The little "BM" icon in browser tabs |
-| `src/pages/index.astro` | Page layout |
-| `src/styles/global.css` | Colors, fonts, spacing |
-| `.github/workflows/deploy.yml` | Tells GitHub how to build and publish the site |
+| `src/content.ts` | **All site text. The file you'll edit most.** |
+| `public/assets/` | Your photo goes here (`headshot.jpg`) |
+| `public/favicon.svg` | The "BM" icon shown in browser tabs |
+| `src/pages/index.astro` | Page structure and the order of sections |
+| `src/styles/global.css` | Colors, fonts, spacing, and layout |
+| `.github/workflows/deploy.yml` | Builds and publishes the site on every push |
+| `astro.config.mjs` | Site address and build settings |
+
+**Design notes:** cream background with a deep navy accent. Headings use Fraunces and body text uses Atkinson Hyperlegible, a typeface designed for readability; both are served from the site itself. All color pairs meet WCAG AA contrast, the page works with a keyboard, and the entrance animation turns off for visitors who prefer reduced motion.
